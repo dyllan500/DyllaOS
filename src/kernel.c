@@ -25,8 +25,22 @@ void kernel_main(char proc_id)
     
     printf("Hello World!!!!\n");
     
-    processor++; // increment 'processor' to enable the next core to execute
+    printf("Clock CORE: %d\n", mailbox_clock_rate(CT_CORE));
+    printf("Clock EMMC: %d\n", mailbox_clock_rate(CT_EMMC));
+    printf("Clock UART: %d\n", mailbox_clock_rate(CT_UART));
+    printf("Clock ARMZ: %d\n", mailbox_clock_rate(CT_ARM));
+
+ 
+    u32 max_temp = 0;
+
+    mailbox_generic_command(RPI_FIRMWARE_GET_MAX_TEMPERATURE, 0, &max_temp);
+    //processor++; // increment 'processor' to enable the next core to execute
     while (1) {
-        uart_send(uart_recv());
+        u32 cur_temp = 0;
+
+        mailbox_generic_command(RPI_FIRMWARE_GET_TEMPERATURE, 0, &cur_temp);
+
+        printf("Cur temp: %dC MAX: %dC\n", cur_temp / 1000, max_temp / 1000);
+        //uart_send(uart_recv());
     }
 }
