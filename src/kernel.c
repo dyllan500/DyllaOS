@@ -1,5 +1,6 @@
 #include <mini_uart.h>
 #include <printf.h>
+#include <mailbox.h>
 
 void putc(void *p, char c) {
     if (c == '\n') {
