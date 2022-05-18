@@ -1,0 +1,8 @@
+# See /boot/overlays/README for all available options
+
+kernel=kernel8.img
+kernel_old=1
+enable_uart=1
+arm_64bit=1
+core_freq_min=500
+disable_commandline_tags=1
