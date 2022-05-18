@@ -14,7 +14,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "printf.h"
+#include <printf.h>
+#include <types.h>
 
 typedef void (*putcf) (void*,char);
 static putcf stdout_putf;
@@ -23,10 +24,10 @@ static void* stdout_putp;
 
 #ifdef PRINTF_LONG_SUPPORT
 
-static void uli2a(unsigned long int num, unsigned int base, int uc,char * bf)
+static void uli2a(u64 num, u32 base, int uc,char * bf)
     {
     int n=0;
-    unsigned int d=1;
+    u32 d=1;
     while (num/d >= base)
         d*=base;
     while (d!=0) {
@@ -52,10 +53,10 @@ static void li2a (long num, char * bf)
 
 #endif
 
-static void ui2a(unsigned int num, unsigned int base, int uc,char * bf)
+static void ui2a(u32 num, u32 base, int uc,char * bf)
     {
     int n=0;
-    unsigned int d=1;
+    u32 d=1;
     while (num/d >= base)
         d*=base;
     while (d!=0) {
@@ -154,17 +155,17 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
                 case 'u' : {
 #ifdef  PRINTF_LONG_SUPPORT
                     if (lng)
-                        uli2a(va_arg(va, unsigned long int),10,0,bf);
+                        uli2a(va_arg(va, u64),10,0,bf);
                     else
 #endif
-                    ui2a(va_arg(va, unsigned int),10,0,bf);
+                    ui2a(va_arg(va, u32),10,0,bf);
                     putchw(putp,putf,w,lz,bf);
                     break;
                     }
                 case 'd' :  {
 #ifdef  PRINTF_LONG_SUPPORT
                     if (lng)
-                        li2a(va_arg(va, unsigned long int),bf);
+                        li2a(va_arg(va, u64),bf);
                     else
 #endif
                     i2a(va_arg(va, int),bf);
@@ -174,10 +175,10 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
                 case 'x': case 'X' :
 #ifdef  PRINTF_LONG_SUPPORT
                     if (lng)
-                        uli2a(va_arg(va, unsigned long int),16,(ch=='X'),bf);
+                        uli2a(va_arg(va, u64),16,(ch=='X'),bf);
                     else
 #endif
-                    ui2a(va_arg(va, unsigned int),16,(ch=='X'),bf);
+                    ui2a(va_arg(va, u32),16,(ch=='X'),bf);
                     putchw(putp,putf,w,lz,bf);
                     break;
                 case 'c' :

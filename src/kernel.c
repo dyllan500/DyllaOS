@@ -1,6 +1,7 @@
 #include <mini_uart.h>
 #include <printf.h>
 #include <mailbox.h>
+#include <video.h>
 
 void putc(void *p, char c) {
     if (c == '\n') {
@@ -11,7 +12,7 @@ void putc(void *p, char c) {
 }
 
 
-static unsigned int processor = 0; // global variable to sync the processors
+static u32 processor = 0; // global variable to sync the processors
 
 void kernel_main(char proc_id)
 {
@@ -30,18 +31,20 @@ void kernel_main(char proc_id)
     printf("Clock EMMC: %d\n", mailbox_clock_rate(CT_EMMC));
     printf("Clock UART: %d\n", mailbox_clock_rate(CT_UART));
     printf("Clock ARMZ: %d\n", mailbox_clock_rate(CT_ARM));
-
- 
-    u32 max_temp = 0;
-
-    mailbox_generic_command(RPI_FIRMWARE_GET_MAX_TEMPERATURE, 0, &max_temp);
+    
+    printf("Resolution 1920x1080\n");
+    video_set_resolution(1920, 1080, 32);
+    
+    u32 colors[5] = {0x5500BBFF, 0x0000BBFF, 0x0055BBFF, 0xAA0000FF, 0x9922BBFF};
+    int color = 0;
+    
     //processor++; // increment 'processor' to enable the next core to execute
-    while (1) {
-        u32 cur_temp = 0;
-
-        mailbox_generic_command(RPI_FIRMWARE_GET_TEMPERATURE, 0, &cur_temp);
-
-        printf("Cur temp: %dC MAX: %dC\n", cur_temp / 1000, max_temp / 1000);
-        //uart_send(uart_recv());
+    while (TRUE) {
+        video_draw_rect(1920, 1080, colors[color]);
+        color++;
+        if(color >= 5)
+        {
+            color = 0;
+        }
     }
 }

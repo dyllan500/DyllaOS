@@ -71,7 +71,7 @@ u8 mailbox_process(mailbox_tag *tag, u32 tag_size) {
 
     memcpy(tag, property_data+2, tag_size);
 
-    return 0x1;
+    return TRUE;
 }
 
 u8 mailbox_generic_command(u32 tag_id, u32 id, u32 *value) {
@@ -83,11 +83,11 @@ u8 mailbox_generic_command(u32 tag_id, u32 id, u32 *value) {
     mbx.value = *value;
 
     if (!mailbox_process((mailbox_tag *)&mbx, sizeof(mbx))) {
-        return 0x0;
+        return FALSE;
     }
 
     *value = mbx.value;
-    return 0x1;
+    return TRUE;
 }
 
 u32 mailbox_clock_rate(clock_type ct) {
